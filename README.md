@@ -1,6 +1,8 @@
 # [Expo-video][Android]: Crash on Swipe-to-Dismiss when player is paused
 
-![expo-video crash](assets/videos/screen-20260115-123410.mp4)
+## Demo
+
+[![Demo Video](assets/images/app-screen.png)](https://github.com/olahanna333/test-video/blob/main/assets/videos/screen-20260115-123410.mp4)
 
 ## Description
 
