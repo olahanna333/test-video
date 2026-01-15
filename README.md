@@ -1,50 +1,42 @@
-# Welcome to your Expo app 👋
+# [Expo-video][Android]: Crash on Swipe-to-Dismiss when player is paused
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![expo-video crash](assets/videos/screen-20260115-123410.mp4)
 
-## Get started
+## Description
 
-1. Install dependencies
+When using expo-video on Android with background playback enabled, the app crashes with a java.lang.RuntimeException if the user swipes the app away (kills the task) while the player is in a paused state.
 
-   ```bash
-   npm install
-   ```
+Interestingly, if the player is playing when the app is swiped away, the service either continues or shuts down cleanly. The crash only occurs specifically when the player is paused but the notification is still active. 
 
-2. Start the app
+## Steps to Reproduce
 
-   ```bash
-   npx expo start
-   ```
+1. Initialize a VideoPlayer with staysActiveInBackground: true and showNowPlayingNotification: true.
 
-In the output, you'll find options to open the app in a
+2. Start playback of an audio/video stream.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+3. Pause the playback (notification remains visible).
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+4. Swipe the app away from the Android Recent Apps / Task Switcher.
 
-## Get a fresh project
+5. An Android "App has stopped" alert appears immediately.
 
-When you're ready, run:
+## Crash in Crashlytics
 
-```bash
-npm run reset-project
-```
+Fatal Exception: java.lang.RuntimeException
+Unable to start service expo.modules.video.playbackService.ExpoVideoPlaybackService@632d492 with Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.eme.mediater/.MainActivity }: kotlin.UninitializedPropertyAccessException: lateinit property weakContext has not been initialized
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+android.app.ActivityThread.handleServiceArgs (ActivityThread.java:4840)
+com.android.internal.os.ZygoteInit.main (ZygoteInit.java:977)
+Caused by kotlin.UninitializedPropertyAccessException: lateinit property weakContext has not been initialized
 
-## Learn more
+## Environment
 
-To learn more about developing your project with Expo, look at the following resources:
+-> Expo SDK version: ~54.0.31
+-> expo-video version: ~3.0.15
+-> Android version: Android 14
+-> Device: Nokia G60 5G
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+-> Other devices from crashlytyics:
+![Craslytics Data](assets/images/craslytics.png)
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+-> Device without this crash: Samsung Galaxy S10 — Android 12
